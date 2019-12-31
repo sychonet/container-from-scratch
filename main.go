@@ -47,6 +47,8 @@ func child() {
 	cmd.Stderr = os.Stderr
 
 	must(syscall.Sethostname([]byte("container")))
+	must(syscall.Chroot("/home/ubuntu/container-from-scratch/container-root"))
+	must(os.Chdir("/"))
 
 	must(cmd.Run())
 }
