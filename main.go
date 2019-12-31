@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"syscall"
 )
 
 //go run main.go run <cmd> <args>
@@ -23,6 +24,14 @@ func run() {
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
+
+	//Namespacing the hostname
+	cmd.SysProcAttr = &syscall.SysProcAttr{
+		//Cloneflags are parameters that will be passed on clone syscall. Clone is what actually creates a new process.
+		//CLONE_NEWUTS is the namespace
+		//UTS : Unix Timesharing System
+		Cloneflags: syscall.CLONE_NEWUTS,
+	}
 
 	must(cmd.Run())
 }
